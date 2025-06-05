@@ -74,6 +74,148 @@ public class BancoDigital {
         } else {
             conta = new ContaPoupanca(cliente);
         }
+
+        banco.getContas().add(conta);
+        System.out.println("\nConta Criada com Sucesso!");
+        System.out.println("Agência: " + conta.getAgencia());
+        System.out.println("Número: " + conta.getNumero());
+    }
+
+    private static Conta encontrarConta(int agencia, int numero) {
+        for (Conta conta : banco.getContas()) {
+            if (conta.getAgencia() == agencia && conta.getNumero() == numero) {
+                return conta;
+            }
+        }
+        return null;
+    }
+
+    private static void depositar() {
+        System.out.println("\n==== Depósito ====");
+        System.out.print("Agência: ");
+        int agencia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = encontrarConta(agencia, numero);
+        if (conta == null) {
+            System.out.println("Conta não encontrada.");
+            return;
+        }
+
+        System.out.print("Valor do depósito: ");
+        double valor = scanner.nextDouble();
+
+        conta.depositar(valor);
+        System.out.println("Depósito realizado com Sucesso!");
+        System.out.println("Novo saldo: " + conta.getSaldo());
+
+    }
+
+    private static void sacar() {
+        System.out.println("\n==== Saque ====");
+        System.out.print("Agência: ");
+        int agencia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número da Conta: ");
+        int numero = scanner.nextInt();
+
+        Conta conta = encontrarConta(agencia, numero);
+        if (conta == null) {
+            System.out.println("Conta não encontrada.");
+            return;
+        }
+
+        System.out.println("Valor do saque: ");
+        double valor = scanner.nextDouble();
+
+        try {
+            conta.sacar(valor);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void transferir() {
+        System.out.println("\n==== Transferência ====");
+        System.out.println("Conta de Origem:");
+        System.out.print("Agência: ");
+        int agenciaOrigem = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número: ");
+        int numeroOrigem = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta origem = encontrarConta(agenciaOrigem, numeroOrigem);
+        if (origem == null) {
+            System.out.println("Conta de origem não encontrada.");
+            return;
+        }
+
+        System.out.println("Conta de destino");
+        System.out.print("Agência: ");
+        int agenciaDestino = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número: ");
+        int numeroDestino = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta destino = encontrarConta(agenciaDestino, numeroDestino);
+
+        if (destino == null) {
+            System.out.println("Conta de destino não encontrada.");
+            return;
+        }
+
+        System.out.println("Valor da transferência: ");
+        double valor = scanner.nextDouble();
+
+        try {
+            origem.transferir(valor,destino);
+            System.out.println("Transferência realizada com Sucesso.");
+            System.out.println("Novo saldo: " + origem.getSaldo());
+        } catch(IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void consultarSaldo() {
+        System.out.println("\n==== Consultar Saldo ====");
+        System.out.print("Agência: ");
+        int agencia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+
+        Conta conta = encontrarConta(agencia, numero);
+
+        if (conta == null) {
+            System.out.println("Conta não encontrada.");
+        }
+
+        System.out.println("Saldo atual: " + conta.getSaldo());
+    }
+
+    private static void imprimirExtrato() {
+        System.out.println("\n==== Extrato ====");
+        System.out.print("Agência: ");
+        int agencia = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = encontrarConta(agencia, numero);
+
+        if (conta == null) {
+            System.out.println("Conta não encontrada.");
+            return;
+        }
+
+        conta.imprimirExtrato();
+
     }
 
 }
